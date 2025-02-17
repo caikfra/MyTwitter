@@ -101,9 +101,9 @@ class RepositorioUsuarios:
     def buscar(self, usuario):
         return self.__usuarios(usuario, None)
     
-    
-
-'''Perguntas:
-1 Devo criar um arquivo de exceções?
-
-'''
+    def atualizar(self, perfil):
+        for indice,  usuario in enumerate(self.__usuarios):
+            if perfil.get_usuario() == usuario.get_usuario():
+                self.__usuarios[indice] = perfil
+        #raise UNCException("Usuário não cadastrado.")
+        return None
