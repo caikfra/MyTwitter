@@ -98,8 +98,11 @@ class RepositorioUsuarios:
                 raise Exception("Usuário já cadastrado.")  # mudar para (UJCException)
         self.__usuarios.append(perfil)
 
-    def buscar(self, usuario):
-        return self.__usuarios(usuario, None)
+    def buscar(self, nome_usuario: str) -> Perfil:
+        for usuario in self.__usuarios:
+            if usuario.get_usuario() == nome_usuario:
+                return usuario
+        return None
     
     def atualizar(self, perfil):
         for indice,  usuario in enumerate(self.__usuarios):
