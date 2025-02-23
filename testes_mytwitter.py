@@ -149,7 +149,8 @@ class TestRepositorioUsuarios(unittest.TestCase):
 
 class TestMyTwitter(unittest.TestCase):
     def setUp(self):
-        self.sistema = MyTwitter()
+        self.repo = RepositorioUsuarios()
+        self.sistema = MyTwitter(self.repo)
 
     def test_criar_perfil_duplicado(self):
         """Verifica se criar_perfil levanta PEException ao duplicar."""
@@ -248,7 +249,7 @@ class TestMyTwitter(unittest.TestCase):
         with self.assertRaises(PDException):
             self.sistema.seguir("@exemplo3", "@exemplo4")
 
-    def test_numero_seguidores(self):
+    def test_seguidores(self):
         pf = PessoaFisica("@exemplo5", "123.456.789-10")
         pf2 = PessoaFisica("@exemplo6", "123.456.789-11")
         self.sistema.criar_perfil(pf)
@@ -256,19 +257,19 @@ class TestMyTwitter(unittest.TestCase):
 
         # pf2 segue pf
         self.sistema.seguir("@exemplo6", "@exemplo5")
-        num_seg = self.sistema.numero_seguidores("@exemplo5")
-        self.assertEqual(len(num_seg), 1)
+        num_seg = self.sistema.num_seguidores("@exemplo5")
+        self.assertEqual(num_seg, 1)
 
-    def test_numero_seguidores_perfil_inexistente(self):
+    def test_seguidores_perfil_inexistente(self):
         with self.assertRaises(PIException):
-            self.sistema.numero_seguidores("@naoexiste")
+            self.sistema.seguidores("@naoexiste")
 
-    def test_numero_seguidores_perfil_inativo(self):
+    def test_seguidores_perfil_inativo(self):
         pf = PessoaFisica("@exemplo7", "123.456.789-12")
         self.sistema.criar_perfil(pf)
         self.sistema.cancelar_perfil("@exemplo7")
         with self.assertRaises(PDException):
-            self.sistema.numero_seguidores("@exemplo7")
+            self.sistema.seguidores("@exemplo7")
 
     def test_seguidores_e_seguidos(self):
         pf1 = PessoaFisica("@teste1", "000.000.000-00")
@@ -282,37 +283,38 @@ class TestMyTwitter(unittest.TestCase):
         self.sistema.seguir("@teste2", "@teste1")
         self.sistema.seguir("@teste3", "@teste1")
 
-        segs = self.sistema.numero_seguidores("@teste1")
-        self.assertEqual(len(segs), 2)  # pf2 e pf3
+        segs = self.sistema.seguidores("@teste1")
+        num_segs = self.sistema.num_seguidores("@teste1")
+        self.assertEqual(num_segs, 2)  # pf2 e pf3
         self.assertIn(pf2, segs)
         self.assertIn(pf3, segs)
 
         # pf2 segue pf3
         self.sistema.seguir("@teste2", "@teste3")
-        seguidos_p2 = self.sistema.numero_seguidos("@teste2")
+        seguidos_p2 = self.sistema.seguidos("@teste2")
         self.assertEqual(len(seguidos_p2), 2)  # pf1 e pf3
 
     def test_seguidores_inexistente(self):
         with self.assertRaises(PIException):
-            self.sistema.numero_seguidores("@xexiste")
+            self.sistema.seguidores("@xexiste")
 
     def test_seguidores_inativo(self):
         pf = PessoaFisica("@teste4", "333.333.333-33")
         self.sistema.criar_perfil(pf)
         self.sistema.cancelar_perfil("@teste4")
         with self.assertRaises(PDException):
-            self.sistema.numero_seguidores("@teste4")
+            self.sistema.seguidores("@teste4")
 
     def test_seguidos_inexistente(self):
         with self.assertRaises(PIException):
-            self.sistema.numero_seguidos("@invalido")
+            self.sistema.seguidos("@invalido")
 
     def test_seguidos_inativo(self):
         pf = PessoaFisica("@teste5", "444.444.444-44")
         self.sistema.criar_perfil(pf)
         self.sistema.cancelar_perfil("@teste5")
         with self.assertRaises(PDException):
-            self.sistema.numero_seguidos("@teste5")
+            self.sistema.seguidos("@teste5")
 
 
 if __name__ == "__main__":

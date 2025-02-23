@@ -37,6 +37,9 @@ class Tweet:
     def get_data_postagem(self) -> datetime:
         return self.__data_postagem
     
+    def __str__(self):
+        return f"Tweet(ID: {self.__id}, Usuário: {self.__usuario}, Mensagem: {self.__mensagem}, Data: {self.__data_postagem})"
+    
     
 class Perfil:
     """
@@ -94,6 +97,10 @@ class Perfil:
     def set_ativo(self, ativo: bool) -> None:
         self.__ativo = ativo
     
+    def __str__(self):
+        return f"Perfil({self.__usuario}, Seguidores: {len(self.__seguidores)}, Seguidos: {len(self.__seguidos)}, Ativo: {self.__ativo})"
+
+    
     
 class PessoaFisica(Perfil):
     """
@@ -106,6 +113,9 @@ class PessoaFisica(Perfil):
     def get_cpf(self) -> str:
         return self.__cpf
 
+    def __str__(self):
+        return f"Pessoa Física({self.get_usuario()}, CPF: {self.__cpf})"
+
 class PessoaJuridica(Perfil):
     """
     Subclasse de perfil.
@@ -117,6 +127,8 @@ class PessoaJuridica(Perfil):
     def get_cnpj(self) -> str:
         return self.__cnpj
     
+    def __str__(self):
+        return f"Pessoa Jurídica({self.get_usuario()}, CNPJ: {self.__cnpj})"
 class RepositorioUsuarios:
     """
     Classe que gerencia o armazenamento de perfis.
@@ -142,13 +154,16 @@ class RepositorioUsuarios:
                 self.__usuarios[indice] = perfil
                 return None
         raise UNCException(perfil.get_usuario())
+    
+    def __str__(self):
+        return f"Repositório de Usuários({len(self.__usuarios)} perfis cadastrados)"
 
 class MyTwitter:
     """
     Classe que faz as operações nos perfis do repositório
     """
-    def __init__(self): 
-        self.__repositorio = RepositorioUsuarios()
+    def __init__(self, repositorio_usuarios: 'RepositorioUsuarios'): 
+        self.__repositorio = repositorio_usuarios
 
     def criar_perfil(self, perfil: 'Perfil') -> None:
         if self.__repositorio.buscar(perfil.get_usuario()) is not None:
@@ -206,7 +221,15 @@ class MyTwitter:
         perfil_seguidor.add_seguidos(perfil_seguido)
         perfil_seguido.add_seguidor(perfil_seguidor)
 
-    def numero_seguidores(self, usuario: str) -> int:
+    def num_seguidores(self, usuario: str) -> int:
+        perfil = self.__repositorio.buscar(usuario)
+        if perfil is None:
+            raise PIException(usuario)
+        if not perfil.is_ativo():
+            raise PDException(usuario)
+        return len(perfil.get_seguidores())
+
+    def seguidores(self, usuario: str) -> int:
         perfil = self.__repositorio.buscar(usuario)
         if perfil is None:
             raise PIException(usuario)
@@ -214,10 +237,10 @@ class MyTwitter:
             raise PDException(usuario)
         return perfil.get_seguidores()  
 
-    def numero_seguidos(self, usuario: str) -> int:
+    def seguidos(self, usuario: str) -> int:
         perfil = self.__repositorio.buscar(usuario)
         if perfil is None:
             raise PIException(usuario)
         if not perfil.is_ativo():
             raise PDException(usuario)
-        return perfil.get_seguidos()  
+        return perfil.get_seguidos()
