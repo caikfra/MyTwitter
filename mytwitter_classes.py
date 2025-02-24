@@ -114,7 +114,7 @@ class PessoaFisica(Perfil):
         return self.__cpf
 
     def __str__(self):
-        return f"Pessoa Física({self.get_usuario()}, CPF: {self.__cpf})"
+        return f"Pessoa Física({self.get_usuario()})"
 
 class PessoaJuridica(Perfil):
     """
@@ -128,7 +128,7 @@ class PessoaJuridica(Perfil):
         return self.__cnpj
     
     def __str__(self):
-        return f"Pessoa Jurídica({self.get_usuario()}, CNPJ: {self.__cnpj})"
+        return f"Pessoa Jurídica({self.get_usuario()})"
 class RepositorioUsuarios:
     """
     Classe que gerencia o armazenamento de perfis.

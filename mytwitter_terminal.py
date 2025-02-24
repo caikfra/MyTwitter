@@ -1,5 +1,6 @@
 from mytwitter_classes import  PessoaFisica, PessoaJuridica, RepositorioUsuarios, MyTwitter
 
+
 repositorio = RepositorioUsuarios() #construtpr da RepositorioUsuarios
 mytt = MyTwitter(repositorio) #construtor da classe Mytwitter
 
@@ -31,80 +32,91 @@ while True:
                     '1 - Tweetar\n'
                     '2 - Ver sua timeline\n'
                     '3 - Ver seus tweets\n'
-                    '4 - Seguir usuário\n'
-                    '5 - Ver número de seguidores\n'
-                    '6 - Ver seus seguidores\n'
-                    '7 - Ver seus seguidos\n'
-                    '8 - Mudar nome do perfil\n'
-                    '9 - Cancelar perfil\n'
-                    '10 - Sair do perfil\n'
+                    '4 - Buscar tweet por ID\n'
+                    '5 - Seguir usuário\n'
+                    '6 - Ver número de seguidores\n'
+                    '7 - Ver seus seguidores\n'
+                    '8 - Ver seus seguidos\n'
+                    '9 - Mudar nome do perfil\n'
+                    '10 - Cancelar perfil\n'
+                    '11 - Mostrar CPF/CNPJ\n'
+                    '12 - Sair do perfil\n'
                     'Digite sua opção: '
                 )
+
                 opcao2 = str(input(menu2))
 
                 if opcao2 == "1":
-                    '''Tweetar'''
                     print('\n')
                     mensagem = str(input('Digite a mensagem do tweet abaixo:\n'))
-                    mytt.tweetar(usuario= nome_usuario, mensagem= mensagem)
+                    mytt.tweetar(usuario=nome_usuario, mensagem=mensagem)
                 
                 elif opcao2 == "2":
-                    '''Timeline'''
                     print('\n')
-                    timeline = mytt.timeline(usuario= nome_usuario)
+                    timeline = mytt.timeline(usuario=nome_usuario)
                     for tweet in timeline:
-                        print(str(tweet))  # Exibe cada tweet corretamente
-
+                        print(str(tweet))
+                
                 elif opcao2 == "3":
-                    '''Tweets'''
                     print('\n')
-                    tweets = mytt.tweets(usuario= nome_usuario)
+                    tweets = mytt.tweets(usuario=nome_usuario)
                     for tweet in tweets:
                         print(str(tweet))
                 
                 elif opcao2 == "4":
-                    '''Seguir'''
                     print('\n')
-                    seguir_usuario = input('Digite o nome do usuário que deseja seguir: ')
-                    mytt.seguir(seguidor= nome_usuario, seguido= seguir_usuario)
+                    tweet_id = input("Digite o ID do tweet que deseja buscar: ").strip()
+                    tweet = mytt.get_tweet(tweet_id)
+                    if tweet:
+                        print("\nTweet encontrado:")
+                        print(str(tweet))
+                    else:
+                        print("\nTweet não encontrado. Verifique o ID e tente novamente.")
                 
                 elif opcao2 == "5":
-                    '''Número de seguidores'''
                     print('\n')
-                    num_seguidores = mytt.num_seguidores(usuario= nome_usuario)
-                    print(int(num_seguidores))
-
+                    seguir_usuario = input('Digite o nome do usuário que deseja seguir: ')
+                    seguir_usuario = formatacao_perfil(seguir_usuario)
+                    mytt.seguir(seguidor=nome_usuario, seguido=seguir_usuario)
                 
                 elif opcao2 == "6":
-                    '''Seguidores'''
                     print('\n')
-                    seguidores = mytt.seguidores(usuario= nome_usuario)
-                    for seguidor in seguidores:
-                        print(str(seguidor))  # Se a classe do seguidor tem __str__, funciona
-
+                    num_seguidores = mytt.num_seguidores(usuario=nome_usuario)
+                    print(int(num_seguidores))
+                
                 elif opcao2 == "7":
-                    '''Seguidos'''
                     print('\n')
-                    seguidos = mytt.seguidos(usuario= nome_usuario)
-                    for seguido in seguidos:
-                        print(str(seguido))  # Se a classe do seguido tem __str__, funciona
+                    seguidores = mytt.seguidores(usuario=nome_usuario)
+                    for seguidor in seguidores:
+                        print(str(seguidor))
                 
                 elif opcao2 == "8":
-                    '''Atualizar perfil'''
+                    print('\n')
+                    seguidos = mytt.seguidos(usuario=nome_usuario)
+                    for seguido in seguidos:
+                        print(str(seguido))
+                
+                elif opcao2 == "9":
                     print('\n')
                     novo_nome = input('Digite o seu novo nome de usuário: ')
                     nome_formatado = formatacao_perfil(novo_nome)
-                    perfil_usuario.set_usuario(novo_usuario= nome_formatado)
-                    repositorio.atualizar(perfil= perfil_usuario)
+                    perfil_usuario.set_usuario(novo_usuario=nome_formatado)
+                    repositorio.atualizar(perfil=perfil_usuario)
                 
-                elif opcao2 == "9":
-                    '''Cancelar perfil'''
+                elif opcao2 == "10":
                     print('\n')
-                    mytt.cancelar_perfil(usuario= nome_usuario)
+                    mytt.cancelar_perfil(usuario=nome_usuario)
                 
-                elif opcao == "10":
-                     break
+                elif opcao2 == "11":
+                    print("\n")
+                    if isinstance(perfil_usuario, PessoaFisica):
+                        print(f"Seu CPF: {perfil_usuario.get_cpf()}")
+                    elif isinstance(perfil_usuario, PessoaJuridica):
+                        print(f"Seu CNPJ: {perfil_usuario.get_cnpj()}")
                 
+                elif opcao2 == "12":
+                    break 
+
                 else:
                     print('\n')
                     print('Opção inválida. Tente novamente.')
@@ -154,7 +166,7 @@ while True:
                     cadastramento = True
                     
                 elif len(cnpj_formatado) != 14:
-                    print('CPF inválido')
+                    print('CNPJ inválido')
 
         else:
             print('\n')
