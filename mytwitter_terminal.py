@@ -66,7 +66,7 @@ while True:
                 
                 elif opcao2 == "4":
                     print('\n')
-                    tweet_id = int(input("Digite o ID do tweet que deseja buscar: "))
+                    tweet_id = int(input("Digite o ID do tweet que deseja buscar (apenas o número): "))
                     tweet = perfil_usuario.get_tweet(tweet_id)
                     if tweet:
                         print("\nTweet encontrado:")
