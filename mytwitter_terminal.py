@@ -50,6 +50,7 @@ while True:
                     print('\n')
                     mensagem = str(input('Digite a mensagem do tweet abaixo:\n'))
                     mytt.tweetar(usuario=nome_usuario, mensagem=mensagem)
+                    repositorio.atualizar(perfil=perfil_usuario)
                 
                 elif opcao2 == "2":
                     print('\n')
@@ -65,8 +66,8 @@ while True:
                 
                 elif opcao2 == "4":
                     print('\n')
-                    tweet_id = input("Digite o ID do tweet que deseja buscar: ").strip()
-                    tweet = mytt.get_tweet(tweet_id)
+                    tweet_id = int(input("Digite o ID do tweet que deseja buscar: "))
+                    tweet = perfil_usuario.get_tweet(tweet_id)
                     if tweet:
                         print("\nTweet encontrado:")
                         print(str(tweet))

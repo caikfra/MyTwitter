@@ -14,13 +14,13 @@ def gerador_id():
     while True:
         yield i
         i += 1
-
+gerador_id = gerador_id()
 class Tweet:
     """
     Classe que representa um Tweet.
     """
     def __init__(self, nome_usuario: str, texto: str):
-        self.__id = next(gerador_id())
+        self.__id = next(gerador_id)
         self.__usuario = nome_usuario
         self.__mensagem = texto
         self.__data_postagem = datetime.today()
@@ -188,6 +188,7 @@ class MyTwitter:
             raise MFPException()
         tweet = Tweet(usuario, mensagem)
         perfil.add_tweet(tweet)
+        
 
     def timeline(self, usuario: str) -> list:
         perfil = self.__repositorio.buscar(usuario)
