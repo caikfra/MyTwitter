@@ -76,7 +76,7 @@ while True:
                 
                 elif opcao2 == "5":
                     print('\n')
-                    seguir_usuario = input('Digite o nome do usuário que deseja seguir: ')
+                    seguir_usuario = input('Digite o nome do usuário que deseja seguir: ').lower()
                     seguir_usuario = formatacao_perfil(seguir_usuario)
                     mytt.seguir(seguidor=nome_usuario, seguido=seguir_usuario)
                 
@@ -99,7 +99,7 @@ while True:
                 
                 elif opcao2 == "9":
                     print('\n')
-                    novo_nome = input('Digite o seu novo nome de usuário: ')
+                    novo_nome = input('Digite o seu novo nome de usuário: ').lower()
                     nome_formatado = formatacao_perfil(novo_nome)
                     perfil_usuario.set_usuario(novo_usuario=nome_formatado)
                     repositorio.atualizar(perfil=perfil_usuario)
